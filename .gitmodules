@@ -1,6 +1,0 @@
-[submodule "cores"]
-	path = uc_blink/cores
-	url = git@github.com:dfries/cores.git
-[submodule "uc_blink/kinetis_helper"]
-	path = uc_blink/kinetis_helper
-	url = git@github.com:dfries/kinetis_helper.git
