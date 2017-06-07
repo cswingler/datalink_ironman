@@ -96,7 +96,7 @@ ListPtr set_time(WatchInfoPtr wi, ListPtr times)
 		tp->data.time.day = time_s->tm_mday;
 		tp->data.time.year = time_s->tm_year % 100;
 	/* TODO: investigate, see change log about day of week */
-		tp->data.time.dow = (time_s->tm_wday + 6) % 7;
+		tp->data.time.dow = (time_s->tm_wday + 7) % 7;
 		tp->data.time.download = 1;
 #ifdef DEBUGGING
 		printf("now %d, offset %d, dz %d, timezone %d\n", now,
@@ -203,7 +203,7 @@ void Usage()
 #define ALLIRONMAN	0x653
 #define DB		0x03C
 /*
-#define DEFAULT 0x03F
+#define DEFAULT 0x01FF
 */
 #define DEFAULT 0
 
@@ -214,13 +214,13 @@ int main(int argc, char **argv)
 	ListPtr times, alarms, chron, timers, apps, todos, phones, annivs;
 	ListPtr system, wristapp, melody;
 	char datafile[1024];
-	int output = SVGA_BLINK;
+	int output = SER_BLINK;
 	int flags = DEFAULT;
 	int (*app_sort) () = dl_app_by_datetime;
 	int (*todo_sort) () = dl_todo_by_prio;
 	int (*phone_sort) () = dl_phone_by_label;
 	int (*anniv_sort) () = dl_anniv_by_date;
-	int type = DATALINK_IRONMAN;
+	int type = DATALINK_150;
 
 	while (argc > 1 && (*argv[1] == '-' || *argv[1] == '+'))
 	{

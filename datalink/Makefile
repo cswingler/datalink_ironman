@@ -15,9 +15,9 @@ CC = gcc
 #CFLAGS = -Wall -fPIC -g -DBINDIR=\"$(BINDIR)\"
 CFLAGS = -Wall -fPIC -g -O2 -DBINDIR=\"$(BINDIR)\"
 
-PORT = /dev/ttyS1
+PORT = /dev/ttyACM0
 
-ENGINES = svgablink serblink
+ENGINES = serblink
 
 RANLIB = echo
 #RANLIB = ranlib
@@ -43,10 +43,8 @@ OBJ = dl_add_to_list.o dl_anniv_by_date.o dl_anniv_by_label.o \
 	dl_todo_by_prio.o dl_write_save.o \
 	parse.o dl_read_save.o
 
-SVGASRC = svgablink.c vt.c send_data.c
 SERSRC = serblink.c
 
-SVGAOBJ = svgablink.o vt.o send_data.o
 SEROBJ = serblink.o
 
 YACC = bison -y -p dl_ -oy.tab.c
@@ -74,7 +72,7 @@ parse.c: dataread.l dl_read_save.c y.tab.h
 	mv lex.yy.c $@
 
 depend: Makefile
-	makedepend -f- -o.o $(SRC) $(SVGASRC) $(SERSRC) > depend
+	makedepend -f- -o.o $(SRC) $(SERSRC) > depend
 	@echo "Dependencies have been made, re-run make to build"
 	@false
 
@@ -84,10 +82,6 @@ serblink.o: $(SERSRC)
 serblink: $(SEROBJ)
 	rm -f $@
 	$(CC) $(CFLAGS) -o $@ $(SEROBJ)
-
-svgablink: $(SVGAOBJ)
-	rm -f $@
-	$(CC) $(CFLAGS) -o $@ $(SVGAOBJ) -lvga -lm
 
 settime.o: settime.c
 	$(CC) $(CFLAGS) -I. -c settime.c 
@@ -106,13 +100,11 @@ cvt: cvt.o
 
 install: all
 	mkdir -p $(BINDIR) $(MANDIR)/man1
-	install -o root -g video -m 4750 svgablink $(BINDIR)
 	install -o root -g root -m 755 serblink $(BINDIR)
 	install -o root -g root -m 755 setwatch $(BINDIR)
 	install -o root -g root -m 755 settime $(BINDIR)
 	install -o root -g root -m 644 setwatch.1 $(MANDIR)/man1
 	install -o root -g root -m 644 settime.1 $(MANDIR)/man1
-	install -o root -g root -m 644 svgablink.1 $(MANDIR)/man1
 	install -o root -g root -m 644 serblink.1 $(MANDIR)/man1
 
 install-devel: install
@@ -122,13 +114,11 @@ install-devel: install
 	install -o root -g bin -m 444 datalink.h $(INCDIR)
 
 uninstall:
-	rm -f $(BINDIR)/svgablink
 	rm -f $(BINDIR)/serblink
 	rm -f $(BINDIR)/setwatch
 	rm -f $(BINDIR)/settime
 	rm -f $(MANDIR)/man1/setwatch.1
 	rm -f $(MANDIR)/man1/settime.1
-	rm -f $(MANDIR)/man1/svgablink.1
 	rm -f $(MANDIR)/man1/serblink.1
 	rm -f $(LIBDIR)/libdatalink.so.1
 	rm -f $(LIBDIR)/libdatalink.a
